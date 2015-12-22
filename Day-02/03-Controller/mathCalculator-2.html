@@ -37,11 +37,14 @@
    <hr>
    <div class="content" ng-controller="calculatorController">
         <input type="text" ng-model="calculator.number1">
+        <select name="" id="">
+            <option value="add">add</option>
+            <option value="subtract">subtract</option>
+            <option value="multiply">multiply</option>
+            <option value="divide">divide</option>
+        </select>
         <input type="text" ng-model="calculator.number2">
-        <input type="button" value="Add" ng-click="calculator.add()">
-        <input type="button" value="Subtract" ng-click="calculator.subtract()">
-        <input type="button" value="Multiply" ng-click="calculator.multiply()">
-        <input type="button" value="Divide" ng-click="calculator.divide()">
+        <input type="button" value="Calculate">
         <div ng-bind="calculator.result">[Result]</div>
     </div>
 </body>
