@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular - Scope Intro</title>
+    <script src="angular.js"></script>
+    <script src="jquery-1.11.3.js"></script>
+    <script>
+        angular.bootstrap(document.body, []).invoke(function($rootScope){
+           window.scope = $rootScope;
+        });
+    </script>
+</head>
+<body>
+    <h1>Greeting App</h1>
+    <hr>
+    <label for="">Name :</label>
+    <input type="text" name="" id="txtName">
+    <input type="button" value="Greet" id="btnGreet">
+    <div id="divMessage">[Greet Message]</div>
+</body>
+</html>
