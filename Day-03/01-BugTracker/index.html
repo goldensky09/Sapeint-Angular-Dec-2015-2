@@ -23,8 +23,8 @@
     <!--
     Use Cases
     =========
-    1. Display a list of bugs
-    2. Add a new bug
+    1. Display a list of bugs - done
+    2. Add a new bug - done
     3. Toggle the closed status of a bug
     4. Remove closed bugs
     5. Display statistics
@@ -45,10 +45,27 @@
 
         bugTrackerApp.controller("bugsController", function($scope){
             $scope.bugs = [
-                'Data validation fails',
-                'User authentication is not correct',
-                'Server communication erratic'
+                { name : 'Data validation fails', isClosed : false},
+                { name : 'User authentication is not correct', isClosed : true},
+                { name : 'Server communication erratic', isClosed : false},
             ];
+            $scope.newBug = '';
+            $scope.addNew = function(){
+                var bugToAdd = {
+                    name : $scope.newBug,
+                    isClosed : false
+                };
+                $scope.bugs.push(bugToAdd);
+                $scope.newBug = '';
+            };
+
+            $scope.toggle = function(bug){
+                bug.isClosed = !bug.isClosed;
+            };
+            /*$scope.selectedBug = '[none]';
+            $scope.setSelectedBug = function(bug){
+                $scope.selectedBug = bug;
+            }*/
         });
     </script>
 </head>
@@ -73,14 +90,17 @@
         </div>
         <div class="list">
             <label for="">Bug :</label>
-            <input type="text" name="" id="">
-            <input type="button" value="Add Bug">
+            <input type="text" ng-model="newBug">
+            <input type="button" value="Add Bug" ng-click="addNew(newBug)">
             <input type="button" value="Remove Closed">
             <ol>
-                <li>User Authentication Failure</li>
-                <li class="closed">Server communication erratic</li>
+                <li ng-repeat="bug in bugs" ng-click="toggle(bug)">{{bug}}</li>
             </ol>
         </div>
+        <!--<div>
+            <label for="">Selected Bug  :</label>
+            <span>{{selectedBug}}</span>
+        </div>-->
     </div>
 </body>
 </html>
