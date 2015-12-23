@@ -133,17 +133,38 @@
                         $scope.bugs.splice(i,1);
                     }
             };
-            $scope.getClosedCount = function(){
-                /*return $scope.bugs.filter(function(bug){
-                    return bug.isClosed;
-                }).length;*/
+            /*$scope.getClosedCount = function(){
+                //return $scope.bugs.filter(function(bug){
+                //    return bug.isClosed;
+                //}).length;
 
                 return $scope.bugs.reduce(function(result, bug){
                     return bug.isClosed ? ++result : result;
                 },0);
-            }
+            }*/
         });
 
+        /*bugTrackerApp.filter("toClosedCount", function(){
+            return function(bugs){
+                return bugs.filter(function(bug){
+                    return bug.isClosed;
+                }).length;
+            }
+        });*/
+        /*bugTrackerApp.filter("toClosedCount", function($filter){
+            var builtinFilter = $filter('filter')
+            return function(bugs){
+                return builtinFilter(bugs, {isClosed : true}).length;
+            }
+        });*/
+        bugTrackerApp.filter("toClosedCount", function($filter){
+            var builtinFilter = $filter('filter')
+            return function(bugs){
+                return bugs.reduce(function(result, bug){
+                    return bug.isClosed ? ++result : result;
+                },0);
+            }
+        });
 
     </script>
 </head>
@@ -152,7 +173,10 @@
     <hr>
     <div class="content" ng-controller="bugsController">
         <div class="stats">
-            <span class="closed">{{getClosedCount()}}</span> / <span>{{bugs.length}}</span>
+            <!--<span class="closed">{{ (bugs | filter:{isClosed : true}).length }}</span> -->
+            <span class="closed">{{ bugs | toClosedCount }}</span>
+            /
+            <span>{{bugs.length}}</span>
         </div>
         <div class="search">
             <label for="">Search :</label>
