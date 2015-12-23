@@ -19,6 +19,11 @@
         li{
             cursor: pointer;
         }
+        .timeStamp{
+            font-style: italic;
+            font-size: small;
+            color : gray
+        }
     </style>
     <!--
     Use Cases
@@ -31,14 +36,32 @@
     6. Search for bugs - done
     7. Sort the bugs - done
     8. Improvise bug display - done
-    9. Display 'createdAt' for each bug
+    9. Display 'createdAt' for each bug - done
     10. Persist the bugs in storage
     11. Persist the bugs in server
     12. Categorize the bugs
     -->
+
+    <!--
+    window.localStorage
+        - key/value store
+        - key and value should be strings
+        - angular.toJson(obj), angular.fromJson(string)
+
+        APIs
+        - setItem(key, value)
+        - getItem(key) // => value
+        - removeItem(key)
+        - clear()
+        - key(index) //=> key at index
+        - length
+
+    -->
     <script src="angular.js"></script>
+    <script src="moment.js"></script>
+    <script src="utils.js"></script>
     <script>
-        var bugTrackerApp = angular.module("bugTrackerApp", []);
+        var bugTrackerApp = angular.module("bugTrackerApp", ["utils"]);
         bugTrackerApp.run(function(){
             console.log("bugTracker initialized");
         });
@@ -49,6 +72,7 @@
             function Bug(defaults){
                 this.name = defaults.name || defaultBugName;
                 this.isClosed = defaults.isClosed || false;
+                this.createdAt = defaults.createdAt || new Date();
             }
             Bug.prototype.toggle = function(){
                 this.isClosed = !this.isClosed;
@@ -58,9 +82,9 @@
 
         bugTrackerApp.controller("bugsController", function($scope, Bug){
             $scope.bugs = [
-                new Bug({ name : 'Data validation fails', isClosed : false}),
-                new Bug({ name : 'User authentication is not correct', isClosed : true}),
-                new Bug({ name : 'Server communication erratic', isClosed : false}),
+                new Bug({ name : 'Data validation fails', isClosed : false, createdAt : new Date(2015,11,20,0,0,0)}),
+                new Bug({ name : 'User authentication is not correct', isClosed : true, createdAt : new Date(2015,11,23,0,0,0)}),
+                new Bug({ name : 'Server communication erratic', isClosed : false, createdAt : new Date(2015,11,19,0,0,0)}),
             ];
             $scope.newBug = '';
             $scope.addNew = function(){
@@ -91,14 +115,7 @@
             }
         });
 
-        bugTrackerApp.value("defaultTrimLength", 20);
 
-        bugTrackerApp.filter("trimText", function(defaultTrimLength){
-            return function(data, trimLength){
-                trimLength = trimLength || defaultTrimLength;
-                return data.length < trimLength ? data : data.substr(0,trimLength) + '...';
-            };
-        });
     </script>
 </head>
 <body ng-app="bugTrackerApp">
@@ -129,9 +146,12 @@
             <ol>
                 <li
                     ng-repeat="bug in (bugs | filter:searchBug | orderBy:sortBugBy:sortBugInDescending)"
-                    ng-click="toggle(bug)"
+                >
+                    <span    ng-click="toggle(bug)"
                     ng-class="{closed : bug.isClosed}"
-                >{{bug.name | trimText}}</li>
+                >{{bug.name | trimText}}</span>
+                <span> @ </span>
+                <span class="timeStamp">{{bug.createdAt | toMoment}}</span>
             </ol>
         </div>
         <!--<div>
