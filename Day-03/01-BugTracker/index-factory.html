@@ -87,10 +87,10 @@
 
 
 
-        bugTrackerApp.service("bugStorage", function($window, Bug){
+       bugTrackerApp.factory("bugStorage", function($window, Bug){
            var storage = $window.localStorage;
            var maxBugId = 0;
-           this.getAll = function getAllBugs(){
+           function getAllBugs(){
                var result = [];
                for(var i=0; i<storage.length; i++){
                    var dataAsString = storage.getItem(storage.key(i));
@@ -100,17 +100,20 @@
                    result.push(bug);
                }
                return result;
-           };
-           this.save = function saveBug(bug){
+           }
+           function saveBug(bug){
                if (bug.id === 0) bug.id = ++maxBugId;
                storage.setItem(bug.id, angular.toJson(bug));
                return bug;
-           };
-
-           this.remove = function removeBug(bug){
+           }
+           function removeBug(bug){
                storage.removeItem(bug.id);
+           }
+           return {
+               getAll : getAllBugs,
+               save : saveBug,
+               remove : removeBug
            };
-
         });
 
         bugTrackerApp.controller("bugsController", function($scope, Bug, bugStorage){
