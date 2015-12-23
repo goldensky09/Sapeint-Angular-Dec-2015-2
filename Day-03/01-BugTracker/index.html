@@ -30,7 +30,7 @@
     5. Display statistics - done
     6. Search for bugs - done
     7. Sort the bugs - done
-    8. Improvise bug display
+    8. Improvise bug display - done
     9. Display 'createdAt' for each bug
     10. Persist the bugs in storage
     11. Persist the bugs in server
@@ -90,6 +90,15 @@
                 },0);
             }
         });
+
+        bugTrackerApp.value("defaultTrimLength", 20);
+
+        bugTrackerApp.filter("trimText", function(defaultTrimLength){
+            return function(data, trimLength){
+                trimLength = trimLength || defaultTrimLength;
+                return data.length < trimLength ? data : data.substr(0,trimLength) + '...';
+            };
+        });
     </script>
 </head>
 <body ng-app="bugTrackerApp">
@@ -122,7 +131,7 @@
                     ng-repeat="bug in (bugs | filter:searchBug | orderBy:sortBugBy:sortBugInDescending)"
                     ng-click="toggle(bug)"
                     ng-class="{closed : bug.isClosed}"
-                >{{bug.name}}</li>
+                >{{bug.name | trimText}}</li>
             </ol>
         </div>
         <!--<div>
