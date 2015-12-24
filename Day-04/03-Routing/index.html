@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Routing App</title>
+    <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        var myApp = angular.module("myApp", ["ngRoute"]);
+        myApp.config(function($routeProvider){
+            $routeProvider
+                .when("/products", {
+                    //template : '<h3>Products</h3>'
+                    templateUrl : 'templates/productsTemplate.html',
+                    controller : "productsController"
+                })
+                .when("/products/:id", {
+                    templateUrl : 'templates/productInfoTemplate.html',
+                    controller : 'productInfoController'
+                })
+                .when("/customers", {
+                    //template : '<h3>Customers</h3>'
+                    templateUrl : 'templates/customersTemplate.html'
+                })
+                .otherwise({
+                    redirectTo : "/products"
+                })
+        });
+        myApp.service("productsService", function(){
+            this.getAll = function(){
+                return [
+                    {id : 1, name : "Pen", cost : 10, units : 10, desc : "Admodum de summis non si enim occaecat praesentibus, non dolore quis fore consequat, nam malis excepteur. Quamquam qui legam, laboris lorem sunt laboris sunt id labore mentitum transferrem e labore e ut eram litteris, amet consequat commodo, e probant an pariatur, culpa appellat a quis irure iis non duis possumus efflorescere. Id eram illum illum ullamco. Ab quis nulla hic admodum. Eiusmod nam quorum cernantur, eram comprehenderit arbitror elit appellat. Fugiat iudicem ne appellat eu nulla reprehenderit mentitum fore aliquip, id eram o elit ita o tempor ubi senserit id ingeniis a nescius an sed in sint nulla lorem eu cillum cupidatat in praesentibus, sunt cupidatat voluptatibus."},
+                    {id : 4, name : "Hen", cost : 100, units : 5, desc : "Admodum de summis non si enim occaecat praesentibus, non dolore quis fore consequat, nam malis excepteur. Quamquam qui legam, laboris lorem sunt laboris sunt id labore mentitum transferrem e labore e ut eram litteris, amet consequat commodo, e probant an pariatur, culpa appellat a quis irure iis non duis possumus efflorescere. Id eram illum illum ullamco. Ab quis nulla hic admodum. Eiusmod nam quorum cernantur, eram comprehenderit arbitror elit appellat. Fugiat iudicem ne appellat eu nulla reprehenderit mentitum fore aliquip, id eram o elit ita o tempor ubi senserit id ingeniis a nescius an sed in sint nulla lorem eu cillum cupidatat in praesentibus, sunt cupidatat voluptatibus."},
+                    {id : 6, name : "Den", cost : 200, units : 2, desc : "Admodum de summis non si enim occaecat praesentibus, non dolore quis fore consequat, nam malis excepteur. Quamquam qui legam, laboris lorem sunt laboris sunt id labore mentitum transferrem e labore e ut eram litteris, amet consequat commodo, e probant an pariatur, culpa appellat a quis irure iis non duis possumus efflorescere. Id eram illum illum ullamco. Ab quis nulla hic admodum. Eiusmod nam quorum cernantur, eram comprehenderit arbitror elit appellat. Fugiat iudicem ne appellat eu nulla reprehenderit mentitum fore aliquip, id eram o elit ita o tempor ubi senserit id ingeniis a nescius an sed in sint nulla lorem eu cillum cupidatat in praesentibus, sunt cupidatat voluptatibus."},
+                    {id : 2, name : "Zen", cost : 0, units : -1, desc : "Admodum de summis non si enim occaecat praesentibus, non dolore quis fore consequat, nam malis excepteur. Quamquam qui legam, laboris lorem sunt laboris sunt id labore mentitum transferrem e labore e ut eram litteris, amet consequat commodo, e probant an pariatur, culpa appellat a quis irure iis non duis possumus efflorescere. Id eram illum illum ullamco. Ab quis nulla hic admodum. Eiusmod nam quorum cernantur, eram comprehenderit arbitror elit appellat. Fugiat iudicem ne appellat eu nulla reprehenderit mentitum fore aliquip, id eram o elit ita o tempor ubi senserit id ingeniis a nescius an sed in sint nulla lorem eu cillum cupidatat in praesentibus, sunt cupidatat voluptatibus."}
+                ];
+            }
+        });
+        myApp.controller("productsController", function($scope, productsService){
+            $scope.products = productsService.getAll();
+        });
+        myApp.controller("productInfoController", function($scope, productsService, $routeParams){
+            var id = parseInt($routeParams.id, 10);
+            $scope.product = productsService.getAll().filter(function(product){
+                return product.id === id;
+            })[0];
+        });
+    </script>
+</head>
+<body ng-app="myApp">
+    <h1>Flopkart</h1>
+    <hr>
+    <span><a href="#/products"> Products </a></span>&nbsp;&nbsp;&nbsp;
+    <span><a href="#/customers"> Customers </a></span>
+    <div ng-view></div>
+</body>
+</html>

@@ -112,22 +112,50 @@
            };
         });
 
-        bugTrackerApp.service("bugService", function($http, Bug){
-            this.getAll = function(onResult){
-                var promise = $http.get("http://localhost:3000/bugs");
-                promise.then(function(response){
+        bugTrackerApp.service("bugService", function($http, Bug, $q){
+            /*this.getAll = function(){
+
+                var deferred = $q.defer();
+
+                var httpPromise = $http.get("http://localhost:3000/bugs");
+                httpPromise.then(function(response){
                     var result = response.data.map(function(bugData){
                         return new Bug(bugData);
                     });
-                    onResult(result);
+                    deferred.resolve(result);
                 });
-            }
+
+                return deferred.promise;
+            }*/
+
+            this.getAll = function(){
+                return $http
+                    .get("/bugs")
+                    .then(function(response){
+                        return response.data.map(function(bugData){
+                            return new Bug(bugData);
+                        });
+                    });
+            };
+
+            this.save = function(bug){
+                if (bug.id === 0){
+                    return $http.post("/bugs", bug).then(function(response){
+                        return new Bug(response.data);
+                    });
+                } else {
+                    //put
+                    return $http.put("/bugs/" + bug.id, bug).then(function(response){
+                        return new Bug(response.data);
+                    });
+                }
+            };
         });
 
         bugTrackerApp.controller("bugsController", function($scope, Bug, bugStorage, bugService){
             $scope.bugs = [];
 
-            bugService.getAll(function(bugs){
+            bugService.getAll().then(function(bugs){
                 $scope.bugs = bugs;
             });
 
